@@ -12,3 +12,4 @@ CREATE TABLE [dbo].[Contacts] (
     CONSTRAINT [PK_dbo.Contacts] PRIMARY KEY CLUSTERED ([ContactId] ASC)
 );
 
+Repository name changed
