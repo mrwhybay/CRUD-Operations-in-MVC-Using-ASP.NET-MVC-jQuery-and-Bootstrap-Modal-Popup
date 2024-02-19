@@ -1,0 +1,14 @@
+﻿
+
+Sql query for using DB first approch
+
+CREATE TABLE [dbo].[Contacts] (
+    [ContactId] INT            IDENTITY (1, 1) NOT NULL,
+    [Name]      NVARCHAR (100) NOT NULL,
+    [City]      NVARCHAR (100) NULL,
+    [Email]     NVARCHAR (100) NOT NULL,
+    [DOB]       NVARCHAR (MAX) NULL,
+    [ContactNo] NVARCHAR (13)  NOT NULL,
+    CONSTRAINT [PK_dbo.Contacts] PRIMARY KEY CLUSTERED ([ContactId] ASC)
+);
+

@@ -1,0 +1,45 @@
+﻿@model Curd_Task_Kolte.Models.Contact
+
+<div class="modal-body">
+    @using (Html.BeginForm("CreateEdit", "Contact", FormMethod.Post, new { @class = "modal-form", id = "createEditForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.ContactId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name)
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", required = "required" })
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.City)
+            @Html.TextBoxFor(model => model.City, new { @class = "form-control" , required = "required" })
+            @Html.ValidationMessageFor(model => model.City)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email)
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", required = "required" })
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DOB) 
+            @Html.TextBoxFor(model => model.DOB, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "datetime" , required = "required" })
+            @Html.ValidationMessageFor(model => model.DOB)
+        </div>
+ 
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactNo)
+            @Html.TextBoxFor(model => model.ContactNo, new { @class = "form-control", required = "required" })
+            @Html.ValidationMessageFor(model => model.ContactNo)
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    }
+</div>

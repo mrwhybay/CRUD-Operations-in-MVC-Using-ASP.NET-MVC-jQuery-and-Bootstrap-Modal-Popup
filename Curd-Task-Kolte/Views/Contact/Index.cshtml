@@ -1,0 +1,137 @@
+﻿@model IEnumerable<Curd_Task_Kolte.Models.Contact>
+@{
+    ViewBag.Title = "Contacts";
+}
+
+<div class="container">
+    <h2>Contacts</h2>
+    <hr />
+    <!-- Button for adding new contact -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createEditModal">
+        Add New Contact
+    </button>
+    <hr />
+    <!-- DataTable to display contact list -->
+    <table id="contactsTable" class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Contact No</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for creating/Edit contact -->
+<div class="modal fade" id="createEditModal" tabindex="-1" role="dialog" aria-labelledby="createEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createEditModalLabel">Add New Contact</h5>
+                <button type="button" class="close" data-bs-dismiss="modal"> X </button>
+            </div>
+            <div class="modal-body">
+                <div id="createEditForm">
+                    @Html.Partial("~/Views/Shared/Modals/CreateEdit.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for delate contact contact -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DeleteModalLabel">Delete</h5>
+                <button type="button" class="close" data-bs-dismiss="modal"> X </button>
+            </div>
+            <div id="DeleteForm">
+                @Html.Partial("~/Views/Shared/Modals/Delete.cshtml")
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function editContact(contactId) {
+        // load contact details
+        $.ajax({
+            url: '/Contact/CreateEdit',
+            type: 'GET',
+            data: { id: contactId },
+            success: function (response) {
+                $('#createEditModalLabel').text('Edit Contact');
+                $('#createEditModal .modal-body').html(response);
+                $('#createEditModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+        // Getting Contact Details before delete
+        function deleteContact(contactId) {
+            $.ajax({
+                url: '/Contact/Delete',
+                type: 'GET',
+                data: { id: contactId },
+                success: function (response) {
+                    $('#DeleteForm').html(response);
+                    $('#DeleteModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+    $(document).ready(function () {
+        loadContacts();
+        initializeDataTables();
+    });
+
+    function loadContacts() {
+        $.ajax({
+            url: '@Url.Action("LoadContacts", "Contact")',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#contactsTable tbody').empty();
+                $.each(data.data, function (index, item) {
+                    var formattedDate = formatDate(item.DOB);
+                    var newRow = '<tr>' +
+                        '<td>' + item.Name + '</td>' +
+                        '<td>' + item.City + '</td>' +
+                        '<td>' + item.Email + '</td>' +
+                        '<td>' + item.DOB + '</td>' +
+                        '<td>' + item.ContactNo + '</td>' +
+                        '<td>' +
+                        '<button type="button" class="btn btn-primary me-2" onclick="editContact(' + item.ContactId + ')" data-bs-toggle="modal" data-bs-target="#createEditModal">Edit</button>' +
+                        '<button class="btn btn-danger" onclick="deleteContact('+item.ContactId+')">Delete</button>' +
+                        '</td>' +
+                        '</tr>';
+                    $('#contactsTable tbody').append(newRow);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+
+    // initialize DataTables
+    function initializeDataTables() {
+        $('#contactsTable').DataTable();
+    }
+    </script>
+
+}
